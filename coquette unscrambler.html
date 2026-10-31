@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Coquette Word Unscrambler 🎀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coquette-pink': '#ffd1dc',
+                        'coquette-rose': '#f4acb7',
+                        'coquette-deep-rose': '#d87093',
+                        'coquette-cream': '#fffaf7',
+                        'coquette-lace': '#fff5f7',
+                        'coquette-lavender': '#e8dff5',
+                        'coquette-peach': '#fce1e4',
+                        'coquette-text': '#5e4b56',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        cursive: ['"Alex Brush"', 'cursive'],
+                        sans: ['"Nunito"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft-pink': '0 8px 30px rgba(244, 172, 183, 0.25)',
+                        'glow': '0 0 15px rgba(216, 112, 147, 0.4)',
+                        'inset-soft': 'inset 0 2px 4px rgba(216, 112, 147, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fffaf7;
+            background-image: 
+                radial-gradient(#f4acb7 0.75px, transparent 0.75px),
+                radial-gradient(#ffd1dc 0.75px, #fffaf7 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: #5e4b56;
+            overflow-x: hidden;
+        }
+
+        /* Lace Border Header/Footer Effect */
+        .lace-top {
+            background: radial-gradient(circle at 10px -5px, transparent 12px, #fff5f7 13px);
+            background-size: 20px 20px;
+        }
+        
+        .scallop-border {
+            border-image: repeating-linear-gradient(45deg, #f4acb7 0, #f4acb7 10px, transparent 0, transparent 20px) 1;
+        }
+
+        /* Floating Bow Particle Styling */
+        .floating-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatUp 8s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fffaf7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f4acb7;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d87093;
+        }
+
+        /* Subtle Pulse Bounce for Icons */
+        .bounce-gentle {
+            animation: bounceGentle 2s infinite ease-in-out;
+        }
+        @keyframes bounceGentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        /* Toast Animation */
+        @keyframes toastIn {
+            0% { transform: translateY(100%) scale(0.8); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .toast-animate {
+            animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-sans relative selection:bg-coquette-pink selection:text-coquette-text">
+
+    <!-- Background Floating Particles Container -->
+    <div id="particle-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Header Banner -->
+    <header class="relative z-10 text-center pt-8 pb-4 px-4">
+        <div class="inline-block relative">
+            <!-- Decorative Ribbon Bow Top Header -->
+            <div class="text-4xl text-coquette-deep-rose mb-1 bounce-gentle inline-block">
+                🎀
+            </div>
+            <h1 class="font-cursive text-5xl md:text-7xl text-coquette-deep-rose drop-shadow-sm font-bold tracking-wide">
+                Coquette Unscrambler
+            </h1>
+            <p class="font-serif italic text-lg md:text-xl text-coquette-text/80 mt-1 max-w-md mx-auto">
+                ~ Transform scrambled letters into sweet vintage words ~
+            </p>
+            <div class="flex items-center justify-center gap-2 mt-2">
+                <span class="h-[1px] w-12 bg-coquette-rose/60"></span>
+                <span class="text-xs text-coquette-deep-rose">✦ 𑁍 ✦</span>
+                <span class="h-[1px] w-12 bg-coquette-rose/60"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-4xl mx-auto w-full px-4 py-4 flex-grow">
+        
+        <!-- Search & Settings Card -->
+        <div class="bg-coquette-cream/90 backdrop-blur-md rounded-3xl border-2 border-coquette-pink p-6 md:p-8 shadow-soft-pink relative overflow-hidden mb-8">
+            <!-- Decorative Corner Ribbon Elements -->
+            <div class="absolute -top-6 -left-6 text-coquette-pink text-4xl transform -rotate-45 pointer-events-none">🎀</div>
+            <div class="absolute -top-6 -right-6 text-coquette-pink text-4xl transform rotate-45 pointer-events-none">🎀</div>
+
+            <!-- Preset Quick Scramble Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
+                <span class="text-xs font-serif italic text-coquette-text/70 mr-1">Try a sweet preset:</span>
+                <button onclick="setPreset('blossom')" class="px-3 py-1 bg-coquette-lace hover:bg-coquette-pink text-coquette-text rounded-full text-xs transition duration-200 border border-coquette-pink/60 flex items-center gap-1 shadow-sm">
+                    🌸 b-l-o-s-s-o-m
+                </button>
+                <button onclick="setPreset('ribbon')" class="px-3 py-1 bg-coquette-lace hover:bg-coquette-pink text-coquette-text rounded-full text-xs transition duration-200 border border-coquette-pink/60 flex items-center gap-1 shadow-sm">
+                    🎀 r-i-b-b-o-n
+                </button>
+                <button onclick="setPreset('coquette')" class="px-3 py-1 bg-coquette-lace hover:bg-coquette-pink text-coquette-text rounded-full text-xs transition duration-200 border border-coquette-pink/60 flex items-center gap-1 shadow-sm">
+                    🩰 c-o-q-u-e-t-t-e
+                </button>
+                <button onclick="setPreset('velvet')" class="px-3 py-1 bg-coquette-lace hover:bg-coquette-pink text-coquette-text rounded-full text-xs transition duration-200 border border-coquette-pink/60 flex items-center gap-1 shadow-sm">
+                    ✨ v-e-l-v-e-t
+                </button>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="relative max-w-xl mx-auto">
+                <div class="relative flex items-center">
+                    <input 
+                        type="text" 
+                        id="letter-input"
+                        placeholder="Type scrambled letters (e.g., opse, listen)..." 
+                        class="w-full py-4 pl-6 pr-28 rounded-full bg-white border-2 border-coquette-rose focus:border-coquette-deep-rose focus:outline-none focus:ring-4 focus:ring-coquette-pink/50 text-coquette-text text-lg shadow-inset-soft placeholder:text-coquette-text/40 placeholder:font-serif placeholder:italic transition-all duration-300"
+                        oninput="handleInput()"
+                        maxlength="12"
+                    />
+                    <button 
+                        id="clear-btn" 
+                        onclick="clearInput()" 
+                        class="hidden absolute right-16 text-coquette-text/50 hover:text-coquette-deep-rose p-2 transition"
+                        title="Clear input"
+                    >
+                        <i class="fa-solid fa-circle-xmark text-lg"></i>
+                    </button>
+                    <div class="absolute right-3 bg-coquette-pink/80 text-coquette-deep-rose w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Options Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-coquette-pink/40 text-sm">
+                <!-- Search mode selector -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-coquette-text/80 uppercase tracking-wider font-serif">Mode:</span>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="radio" name="match-mode" value="all" checked onchange="unscrambleWords()" class="sr-only peer">
+                        <span class="px-3 py-1 rounded-full text-xs border border-coquette-rose/60 peer-checked:bg-coquette-deep-rose peer-checked:text-white transition duration-200">
+                            All Sub-words
+                        </span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="radio" name="match-mode" value="exact" onchange="unscrambleWords()" class="sr-only peer">
+                        <span class="px-3 py-1 rounded-full text-xs border border-coquette-rose/60 peer-checked:bg-coquette-deep-rose peer-checked:text-white transition duration-200">
+                            Exact Length Anagrams
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Particle Effect Toggle Switch -->
+                <div class="flex items-center gap-2 ml-auto">
+                    <span class="text-xs font-serif italic text-coquette-text/80">Floating Bows ✨</span>
+                    <button id="toggle-particles" onclick="toggleParticles()" class="w-11 h-6 bg-coquette-rose rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none">
+                        <div id="toggle-circle" class="w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out transform translate-x-5"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display Section -->
+        <div id="results-wrapper">
+            <!-- Empty State -->
+            <div id="empty-state" class="text-center py-12 px-4 bg-coquette-lace/60 rounded-3xl border border-dashed border-coquette-rose/60">
+                <div class="text-5xl mb-3 opacity-80">🩰</div>
+                <h3 class="font-serif text-2xl font-semibold text-coquette-deep-rose">Ready to Unscramble</h3>
+                <p class="text-coquette-text/70 text-sm max-w-sm mx-auto mt-1">
+                    Enter any letters above or click one of our vintage presets to find all hidden words!
+                </p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden text-center py-12">
+                <div class="inline-block text-4xl text-coquette-deep-rose animate-spin mb-2">🎀</div>
+                <p class="font-serif italic text-coquette-text">Unweaving sweet words...</p>
+            </div>
+
+            <!-- Results Content Container -->
+            <div id="results-content" class="hidden space-y-6">
+                <!-- Stats & Secondary Filter Bar -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-coquette-pink/30 px-6 py-3 rounded-2xl border border-coquette-pink/60">
+                    <div class="text-sm font-serif">
+                        Found <span id="total-count" class="font-bold text-coquette-deep-rose text-lg">0</span> 
+                        valid words for "<span id="query-letters" class="italic font-semibold"></span>"
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <i class="fa-solid fa-magnifying-glass text-xs text-coquette-deep-rose"></i>
+                        <input 
+                            type="text" 
+                            id="results-filter" 
+                            placeholder="Filter results..." 
+                            oninput="filterResults()" 
+                            class="px-3 py-1 text-xs rounded-full bg-white border border-coquette-rose focus:outline-none focus:ring-2 focus:ring-coquette-pink w-full sm:w-36"
+                        />
+                    </div>
+                </div>
+
+                <!-- Word Groups by Length Container -->
+                <div id="word-groups-container" class="space-y-6"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Coquette Footer -->
+    <footer class="relative z-10 text-center py-6 px-4 mt-8 bg-coquette-lace border-t-2 border-coquette-pink/50">
+        <div class="max-w-md mx-auto text-xs text-coquette-text/70 space-y-1">
+            <p class="font-serif italic text-sm text-coquette-deep-rose">
+                "Words are ribbons that tie thoughts together." 🎀
+            </p>
+            <p>© Craft-created with pastel coquette elegance</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification for Copy -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+        <div class="bg-coquette-deep-rose text-white px-5 py-3 rounded-2xl shadow-lg border-2 border-white flex items-center gap-2 toast-animate">
+            <span class="text-lg">🎀</span>
+            <span id="toast-message" class="text-sm font-semibold">Copied to clipboard!</span>
+        </div>
+    </div>
+
+    <!-- Embedded Rich Dictionary & Logic Script -->
+    <script>
+        /* Embedded English Word Dictionary (Length 2 to 9) */
+        const EMBEDDED_WORDS = [
+            // 2-Letter Words
+            "an","am","ad","at","as","be","by","do","go","he","hi","if","in","is","it","me","my","no","of","on","or","so","to","up","us","we",
+            // 3-Letter Words
+            "act","add","age","ago","aim","air","all","and","any","arm","art","ask","bad","bar","bat","bay","bed","bee","big","bit","box","boy","bus","but","buy","can","cap","cat","cow","cut","day","did","dog","dry","ear","eat","egg","end","eye","fan","far","fat","few","fly","fog","for","fun","get","god","gold","got","gun","guy","hat","her","him","his","hit","hot","how","ice","ill","ink","jar","job","joy","key","kid","lap","law","lay","let","lie","lip","log","lot","low","mad","man","map","mat","may","mix","mud","new","not","now","nut","oak","odd","off","old","one","our","out","owl","own","pan","pay","pen","pet","pie","pin","pit","pot","ran","red","run","sad","sam","saw","say","sea","see","set","sew","she","sky","son","sun","tea","ten","the","tie","tin","toe","too","top","toy","try","two","use","van","war","way","web","who","why","win","yes","yet","you","zip",
+            // 4-Letter Words
+            "able","ache","acid","aged","also","arch","area","army","arts","auto","baby","back","bake","ball","band","bank","bare","bark","barn","base","bath","bear","beat","bell","belt","best","bird","blue","boat","body","bold","bolt","bone","book","born","boss","both","bowl","bulb","burn","busy","cage","cake","calm","camp","card","care","cart","cash","cast","cave","cell","chat","chef","city","clan","clay","clip","club","coal","coat","code","coin","cold","cook","cool","copy","cord","core","cork","corn","cost","cozy","cure","cute","dark","data","date","dawn","dear","deck","deep","deer","dent","desk","diet","dirt","disc","dish","dock","doll","door","dose","dove","drag","draw","drum","duck","dust","duty","each","earn","east","easy","edge","exam","exit","face","fact","fair","fall","farm","fast","fear","feed","feel","file","film","find","fine","fire","firm","fish","flag","flat","flow","foam","fold","food","foot","ford","fork","form","fort","free","frog","from","fuel","full","game","gate","gear","gift","girl","give","glad","glass","glow","glue","goat","gold","good","grid","grow","hair","half","hall","hand","hard","harm","hate","have","head","heal","heap","heat","help","herb","hero","high","hill","hint","hold","hole","home","hope","horn","host","hour","huge","hunt","icey","icon","idea","iron","item","jade","jail","join","joke","jump","just","keep","kick","kind","king font","kiss","kite","knee","knot","know","lace","lack","lady","lake","lamp","land","lane","last","late","lead","leaf","lean","left","lend","lens","life","lift","light","like","lily","limb","line","link","lion","lip","list","load","loan","lock","log","long","look","loop","lord","loss","loud","love","luck","lump","lung","lush","make","male","many","maple","mark","mask","mass","math","meal","meat","melt","mesh","mild","milk","mill","mind","mine","mint","miss","mode","mold","moon","more","most","move","much","must","myth","name","near","neat","neck","need","nest","news","next font","nice","night","node","noon","norm","nose font","note","oath","ocean","once","only font","open","oval","over","pack","page","pain","pair","palm","park","part font","pass","past","path","peak","pear","peak font","pear","peat","peel","peer","pink","pipe","plan","play","plum font","poem","poet","pole","pond","pool font","poor","post","pure","race","rain font","rank","rare","rate","read font","real","rich","ride font","ring","rise","risk font","road","rock","role font","roof","room","rose font","ruby","ruin","rule","safe","sage","said","sail font","salt","sand","save","seal font","seam","seat","seed","seek","seem","seen","self","sell","send font","shadow","shake","shine","ship","shoe","shop","shot","show","silk font","sing","sink font","site","skin","soft","song","soul","spark","star","stem","step font","stone","stop","tale","tall","team","tear","them font","think","this font","tide","tidy","tile font","time","tine","tiny","toast","tone","tool","tour font","tree","true","tune","twin","unit","upon font","user","vague","vain","vale","valley font","vast","veil","vein","vent font","verb","very","view","vine font","vise","visit","voice","vote font","wait","walk","wall","want","ward","warm","wash","wave font font","wear","web","week font","well","west","wild","wind font","wine","wing","wire","wise font font","wish","wolf","word","work","yard font","yarn","year font font","zero","zinc","zone",
+            // 5-Letter Words
+            "about","above","actor","adapt","admit","adopt","adult","after","again","agent","agree","ahead","alarm","album","alert","align","alike","alive","allow","alone","along","aloud","alter","amaze","amber","among","angel","anger","angle","angry","anime","ankle","annoy","apple","apply","apron","arena","argue","arise","array","arrow","asset","audio","audit","avoid","awake","award","aware","awful","bacon","badge","baker","ballet","banjo","basin","basis","batch","beach","beard","beast","beauty","begin","being","below","berry","blade","blame","blank","blast","blaze","bleed","blend","bless","blind","blink","bliss","block","bloom","blown","blush","board","boast","bonus","boost","booth","bound","brain","brake","brand","brass","brave","bread","break","breed","brick","bride","brief","bring","brisk","broad","brook","broom","brown","brush","buddy","build","bunch","buyer","cabin","cable","camel","canal","candy","candy","canal","canoe","canon","canvas","carpet","carry","carve","catch","cause","cedar","chain","chair","chalk","charm","chart","chase","cheap","check","cheek","cheer","chess","chest","chick","chief","child","chill","chime font","china","chirp","choir","choke","chord","chore","chorus","cider","cigar","civic","civil","claim","clash","clasp","class","clean","clear","clever","click","cliff","climb","cling","clock","close","cloth","cloud","clover","clown","coach","coast","cocoa","color","comet","comic","coral","couch","count","court","cover","craft","crane","crash","crater","crave","cream","creed","creek","crest","cricket","crime","crisp","crop","cross","crowd","crown","crude","cruel","crumb","crush","crust","crystal","cubed","cubic","cult","cupid","cure","curly","curtain","curve","cycle","daily","dairy","dance","dandy","darth","date","daunt","dawning","decal","decay","decor","decoy","delay","delta","denim","dense","depth","derby","devil","diary","digest","diner","dingo","disco","ditch","diver","divine","dodge","donor","donut","doubt","dough","draft","drain","drake","drama","dream","dress","drift","drill","drink","drive","drone","drown","drummer","duet","dune","eagle","early","earth","easel","eight","elbow","elder","elect","elite","ember","emery","empty","enjoy","enter","entry","equal","equip","erase","error","essay","event","every","exact","exile","exist","extra","fable","facet","faint","fairy","faith","fancy","feast","fever","fiber","field","fifth","fifty","fight","filet","final","finch","fiona","fireman","first","fishy","flair","flame","flash","flask","fleet","flesh","flint","float","flock","flood","floor","flora","flour","fluff","flute","flyer","focal","focus","foggy","folly","force","forge","forth","forum","found","frame","fraud","fresh","front","frost","fruit","funny","fuzzy","giant","gifted","gipsy","glass","glaze","gleam","glide","globe","gloom","glory","gloss","glove font","glyph","gnome","grace","grade","grain","grand","grant","grape","graph","grasp","grass","grave","gravy","great","green","greet","grief","grill","grind","group","grove","growl","guard","guess","guest","guide","guild","guilt","gummy","habit","happy","haven","heart","heavy","hedge","hello","henna","honey","honor","horse","hotel","house","human","humor","hurry","hybrid","icing","ideal","image","index","input","irony","ivory","japan","jewel","jolly","judge","juice","juicy","jumbo","jumper","junction","junkie","junk","kayak","khaki","knack","kneel","knife","knock","koala","label","labor","lacey","lagoon","lemon","level","light","lilac","linen","liner","liver","llama","lobby","local","lodge","logic","lotus","lover","loyal font","lucid","lucky","lunar","lunch","luxury","lyric","magic","magnet","maple","march","match","medal","melon","mercy","merit","merry","metal","metro","midst","might","mimic","miner","minor","minus","model","modem","moist","money","month","moral","motif","motor","mount","mouse","movie","museum","music","musty","naive","nanny","nylon","oasis","ocean","olive","onset","opera","opium","orbit","orchid","order","organ","otter","ounce","outer","overt","owl","ozone","paint","panther","panel","paper","parse","party","pastel","pastor","patio","pouch","pause","peace","peach","pearl","pedal","penny","petal","phase","phone","piano","pilot","pinch","piper","piping","pirate","pistol","pitch","pixel","pizza","place","plaid","plain","plane","planet","plant","plate","plaza","pleat","plump","plush","poem","poet","point","polar","polka","pool","poppy","porch","posy","power","pride","prime","prince","prism","prize","probe","proof","pulse","pupil","puppy","purity","purple","purse","queen","query","quest","quick","quiet","quill","quilt","quota","radar","radio","radish","rainy","raise","rally","ranch","range","rapid","rascal","raven","rayon","razor","reach","react","realm","rebel","refer","regal","reign","relax","relay","renew","reply","reset","resin","retro","rhyme","ribbon","rider","ridge","rifle","rigid","ring font font","rinse","rival","river","robin","robot","rocker","rocky","rodeo","rouge","rough","round","route","rover","royal","ruby","rugby","ruler","rural","rust","rustic","sacred","sadly","salad","salon","salsa","salty","satin","sauce","savor","scale","scare","scarf","scene","scent","scout","screw","scroll","scuba","seal","season","sedan","sense","serum","setup","shade","shake","shaky","shale","shall","shame","shank","shape","share","shark","sharp","shave","shawl","shear","sheen","sheep","sheer","sheet","shelf","shell","shift","shine","shiny","ship","shirt","shock","shoe","shore","short","shout","shove","showy","shrub","shrug","silk","silky","silly","silver","simmer","simple","since","siren","syrup","skate","sketch","skiing","skill","skirt","skull","skunk","slate","sleek","sleep","sleet","slice","slick","slide","slime","slimy","sling","slip","slope","sloth","slump","smart","smell","smile","smirk","smoke","smoky","snack","snail","snake","snap","sneak","snipe","snowy","soapy","sober","solar","solid","solve","sonar","sonic","sorry","sound","south","space","spark","spear","speck","speed","spell","spice","spicy","spider","spike","spill","spin","spine","spire","spirit","spite","splat","split","spoil","spoke","spoon","sport","spot","spout","spray","spree","squad","squat","staff","stage","stain","stair","stake","stale","stalk","stall","stamp","stand","star","stark","start","state","steak","steal","steam","steel","steep","steer","stem","step","stern","stick","stiff","still","sting","stink","stitch","stock","stone","stony","stool","storm","story","stout","stove","straw","stray","stream","street","stride","strike","string","strip","stroke","strong","strut","studio","stuff","sugar","suite","sunny","super","surely","surf","sweet","swirl","sword","table","taboo","tacky","talent","tally","tango","taper","tapestry","tardy","taste","tasty","teddy","tempo","tenor","tense","tepee","tenth","terra","thank","theatre","theme","theory","thief","thigh","thing","think","third","thirst","thorn","thousand","three","thrum","thumb","thump","tiara","tiger","tight","timer","timid","tinge","tipsy","title","toast","today","token","topic","torch","total","touch","towel","tower","toxic","trace font","track","trade","trail","train","trait","trash","tread","treat","tree","trend","trend","trial","tribe","trick","triffid","trim","trip","triple","triumph","troop","trout","truce","truck","truly","trunk","trust","truth","tulip","tuna","tuner","tune","tunic","tunnel","turbo","turtle","tutor","tweed","twin","twist","tying","ultra","uncle","under","undo","unify","union","unit","unity","untie","until","upper","upset","urban","urge","usage","usual","utter","vague","valet","valid","valley","value","valve","vapor","vault","velvet","venom","venue","verge","verse","vessel","vibe","vicar","video","vigil","villa","vinyl","viola","violet","violin","vip","virtual","virtue","virus","visit","visor","vista","vital","vivid","vocal","vodka","vogue","voice","vortex","voter","vouch","vow","waffle","wagon","waist","waiter","waken","waltz","warning","wash","waste","watch","water","wave","waver","weary","weave","wedge","weight","weird","whale","wheat","wheel","where","which","while","whim","whine","whip","whirl","white","whole","whole","widow","width","wield","windy","winter","wire","wisdom","witch","woman","women","wood","woody","wool","wordy","world","worry","worth","would","wound","wrist","write","writer","wrong","yacht","yearn","yeast","yield","young","youth font","zebra","zero","esty","zesty","zilch","zipper","zone",
+            // 6-Letter Words
+            "action","active","actual","admire","advice","advise","afford","affirm","agenda","always","amazed","amber","anchor","angelic","animal","annual","answer","appeal","apple","arch","arcane","arouse","aroma","artist","ascent","aspect","assert","assist","assure","atomic","attach","attain","attend","attic","author","autumn","avenue","awaken","back","baking","ballet","bambino","banana","banner","barley","basket","beauty","behave","behind","behold","belong","beloved","bent","berry","beside","bestow","betray","better","beyond","binary","bishop","bitter","blanket","blaze","blazer","bless","bliss","blossom","blouse","breeze","bridge","bright","bubble","budget","buffer","butter","button","cabinet","cactus","camera","candle","canvas","castle","casual","catalog","caucus","caught","cavity","celery","cement","center","cereal","chance","change","chapel","charge","charity","charm","charter","cheese","cherish","cherry","chic","chiffon","chimney","chorus","church","cinema","circle","circus","citrus","clover","coffee","collar","colony","column","combat","comedy","comfort","coming","commit","common","compact","company","compare","compass","compel","comply","concert","conclude","conduct","confess","confirm","connect","consent","conserve","consist","console","consul","consult","contact","contain","content","contest","context","contour","control","convert","convey","convict","cookie","coquette","coral","corner","costume","cottage","cotton","council","counsel","counter","country","couple","coupon","courage","cousin","cradle","craft","crater","crayon","create","credit","creek","cricket","crisis","critic","crochet","crystal","cupcake","curtain","cushion","custom","damage","dancer","dandelion","danger","daring","darkness","dazzle","dealer","debate","decade","decent","decide","declare","decor","dedicate","deeply","defeat","defend","define","degree","delay","delight","deluxe","demand","demure","dental","depart","depend","depict","deploy","deposit","depth","deputy","derive","descend","desert","design","desire","detail","detect","devote","diadem","dialog","diamond","diaper","digest","dimple","dinner","direct","disarm","disaster","disc","discuss","disease","dismay","display","dispute","distress","district","divert","divide","divine","doctor","domain","donate","donkey","doodle","doorway","dorsal","double","dragon","drawer","dreamer","dreamy","dress","drift","driver","duckling","duet","duster","duvet","dynamo","eager","eagle","easel","east","easter","echo","eclipse","ecology","economy","effect","efforts","elastic","elderly","element","elephant","elicit","elegance","emerald","emotion","empire","employ","enable","enchant","endless","endorse","engage","engine","engrave","enjoy","enlarge","enlighten","enough","enrich","enroll","ensure","enter","entire","entity","enzyme","episode","equal","equity","eraser","errand","escape","escort","essence","estate","esteem","ethics","event","every","evolve","exceed","excel","except","excess","excite","excuse","execute","exempt","exert","exhibit","exile","exotic","expand","expect","expert","expire","explain","explore","export","expose","extend","extent","extinct","extra","extract","extreme","eyebrow font","eyelash","fabric","fabricate","facade","facial","factor","factory","faculty","fairy","falcon","fallout","family","famine","famous","fancy","fantasy","farms","fashion","fasten","father","fathom","favour","feather","feature","female","fender","fennel","ferret","ferry","festival","fetus","fiber","fiction","fiddle","field","figure","filter","finale","finding","finger","finish","fireman","firefly","fiscal font font","fisher","fission","fissure font","fitness","flame","flamingo","flannel","flavor","fleece","flight","flower","fluffy","flute","flutter","flying","fodder","folder","follow","fondant","fondle","foolish","forbid","forest","forever","forget","formal","format","former","formula","fossil","foster","fountain","fourth","fracture","fragile","fragment","fragrance","frail","framework","frantic","freedom","freeze","freight","frequent","friction","friend","fleshy","fringes","frisky","frolic","frosting","froth","frugal","fruit","fulfill","fullness","fumigate","funnel","furniture","fusion","galaxy","gallon","gallop","gambit","game","garage","garden","garlic","garment","garnish","gasp","gather","gateway","gauze","gazelle","gemstone","general","generous","genetic","genius","gentle","genuine","gesture","ghost","giant","gifted","gigantic","ginger","giggle","giraffe","girdle","glamour","glance","glassware","glisten","glitter","gloom","glorify","glorious","glory","glove","glow","glowing","goddess","golden","gospel","gossip","gothic","gourmet","govern","grace","gracious","gradual","graffiti","granite","granola","grant","grape","grapefruit","graph","graphed","grasp","grass","gravity","gray","grease","great","green","greet","greeting","grenade","grid","grief","grieve","grill","grimace","grind","groove","groovy","ground","growth","guarantee","guard","guidance","guided","guideline","guitar","gumdrop","habit","habitat","haggard","haircut","halifax","halogen","hammer","hamper","handbag","handle","handshake","handy","hanger","happen","harbor","hardware","hardy","harmony","harness","harvest","hasten","hatred","hazard","headband","header","heading","headlight","headline","healing","health","healthy","hearth","hearty","heater","heaven","heavier","heavy","hedge","height","heiress","helicopter","helmet","helpful","hemp","herbal","heritage","heroic","heroine","herring","hesitate","heyday","hidden","highway","hiker","hinder","historian","history","holder","holiday","hollow","homage","homely","honest","honey","honeydew","honors","hopeful","horizon","hornet","horror","hospital","hostess","hostile","hotdog","hotel","hotline","housework","howl","human","humane","humble","humid","humor","humorous","hundred","hunger","hungry","hunter","hurdle","hurricane","hurry","husband","hybrid","hydrant","iceberg","icicle","iconic","identity","idiom","idol","idle","igloo","ignite","ignore","illuminate","illusion","illustrate","image","imagery","imagine","imitate","immense","immortal","impact","impart","impede","imperil","imply","import","impose","impress","improve","impulse","inbox","incense","inch","incident","incline","include","income","increase","indent","index","indicate","indoor","induce","indulge","infant","infect","inferior","infinite","inform","inhale","inherit","initial","injure","injury","inland","inmate","innocent","input","inquire","inquiry","insect","inside","insight","insist","inspect","inspire","install","instance","instant","instead","instinct","institute","insult","insure","intact","intake","intend","intense","intent","interact","interest","interior","intern","internet","interpret","interval","intimate","intron","invade","invent","invest","invite","invoke","involve","inward","iris","ironic","irony","island","isolate","isotope","issue","italic","ivory","jacket","jaguar","jasmine","jasper","jealous","jersey","jester","jingle","journal","journey","joyful","jubilee","juggler","jigsaw","juliet","jumper","jungle","junior","juniper","junket","justice","justify","keeper","kernel","kettle","keynote","kidney","kimono","kindness","king","kingdom","kitchen","kitten","knitting","knight","knock","kowtow","labels","labor","lace","lacquer","ladder","lagoon","lament","laminate","lantern","laptop","lark","larva","larynx","lashing","lasso","latch","lately","latent","latest","lather","lattice","laugh","laughter","launch","laundry","laurel","lavender","lawful","lawyer","layout","leader","league","leak","lean","learn","lease","leather","lecture","legacy","legend","legion","lemonade","lender","leopard","lesson","letter","level","liable","liaison","liberal","liberty","library","license","licorice","light","lighten","lighting","likely","liken","lilac","lily","lime","limelight","limit","limited","lincoln","linear","linen","lineup","linger","lining","linens","link","linseed","lint","lion","lip balm","lipstick","liquid","liquor","listen","literal","literary","litmus","litter","little","lively","livery","living","lizard","loader","loafer","loan","loath","lobster","locate","lock","locker","locket","locksmith","locust","lodging","logical","logistics","lonely","longevity","longing","lookout","loophole","loose","loosen","lottery","lotion","lotus","lounge","lovely","lover","loving","loyalty","lucid","luck","lucky","luggage","lullaby","lumber","luminous","lump","lunar","luncheon","lung","lupin","lure","lush","luster","lustrous","luxury","lyric","lyrical","machine","madam","madness","magazine","magenta","magic","magical","magnet","magnify","maiden","mailman","majesty","major","majority","makeup","maker","making","malice","mallard","mallow","mallet","mambo","mammal","manage","manager","mandate","mandolin","mangle","mango","maniac","manifest","manifold","manor","mansion","mantle","manual","maple","marble","margin","marina","mariner","marine","maron","maron","market","marking","maroon","marrow","marry","marsh","marshal","marshmallow","martial","martyr","marvel","marvelous","mascot","mascara","mask","mason","masquerade","massage","massive","master","masterpiece","mastic","matches","matchmaker","mate","material","maternal","matrix","matron","matter","mattress","mature","maturity","maximum","mayhem","meadow","measure","meatball","mechanic","medal","medallion","medical","medicine","medieval","medium","medley","melody","melon","member","memo","memoir","memory","menace","mental","mention","mentor","menu","mercantile","mercenary","merchant","merciful","mercy","merely","merger","merit","mermaid","merry","mesh","message","metal","metallic","meteor","method","metric","metropolis","microbe","mic drop","middle","midnight","midst","mighty","mildew","mileage","military","milky","miller","million","mimic","mimosa","mince","mindful","mine","miner","mineral","mingle","miniature","minimal","minimum","mining","minister","minor","minority","mint","minty","minus","minute","miracle","mirage","mirror","mischief","misery","misguide","mislay","mislead","missile","mission","mist","mistake","mistletoe","mistress","misty","mixture","mobile","modern","modest","modify","moisture","molasses","mold","molecule","moment","monarch","monastery","monk","monkey","monocle","monster","monument","mood","moonlight","moonlit","moor","moral","morale","morality","morning","mortal","mortar","mosaic","moss","mother","motif","motion","motive","motor","motto","mould","mountain","mourn","mouse","mouth","movement","movie","muffin","muffler","muggy","mule","multiple","mummy","mural","murder","muscle","museum","mushroom","music","musical","musician","musk","musket","mustard","muster","mutation","mute","mutter","mutton","mutual","muzzle","myrtle","myself","mystery","mystic","myth","nail","naked","namely","napkin","narration","narrow","nation","native","natural","nature","nausea","nautical","navigational","navy","nebula","nectar","needle","neglect","negotiate","neighbor","neon","nephew","nerve","nestle","netting","network","neural","neutral","neutron","never","newborn","newsboy","newsprint","nexus","nibble","nickname","nicotine","night","nightingale","nightly","nightmare","nimble","nimbus","nine","ninja","nipple","nitrate","nitrogen","nobility","noble","nodule","noise","noisy","nomad","nominal","nominee","noodle","nonsense","nook","noon","nordic","normal","north","northern","nostalgia","nostril","notable","notation","notebook","notepad","nothing","notice","notion","novel","novice","nozzle","nucleus","nudge","nugget","number","numbness","numeral","numerous","nursery","nursing","nurture","nutmeg","nutrient","nylon","nymph","oakwood","oasis","oatmeal","obedience","obedient","obey","obituary","object","oblong","obscure","observe","obsolete","obstacle","obtain","obvious","occasion","occult","occupy","ocean","octave","octet","octopus","oddity","odyssey","offense","offensive","offer","offering","officer","official","offset","oilskin","ointment","olden","olive","olives","olympic","ombudsman","omega","omen","omission","omit","omnibus","onward","onlooker","onyx","opaque","open","opener","opening","opera","operate","operetta","opinion","opium","opponent","oppose","opposite","optics","optimal","optimist","option","opulent","orange","orator","orchard","orchid","ordain","order","ordinal","ordinary","ordnance","organ","organic","organism","organize","orient","origin","original","ornament","orphan","ostrich","other","otter","outburst font","outcome","outcrop","outcry","outdated","outdoor","outfit","outfox","outgrow","outing","outlaw","outlet","outline","outlive","lookout","outpost","output","outrage","outreach","outset","outside","outsmart","outspoken","outstretch","outwit","oval","ovary","oven","overcoat","overcome","overdo","overdose","overflow","overhang","haul","overhead","overhear","overlap","overlook","overnight","overpass","overrate","overrule","overseas","oversight","overstep","overt","overtake","overthrow","overture","overturn","overwhelm","owl","ownership","oxford","oxide","oxygen","oyster","ozone","pace","pack","package","packer","packet","packing","padlock","pagan","page","pageant","pageboy","pager","paginate","painful","paint","paintbrush","painter","painting","pair","palace","palatable","palate","pale","palette","palisade","pallor","palm","palmetto","palpable","paltry","pamphlet","panama","pancake","pancreas","panda","pandemonium","panel","panic","panorama","panther","pantry","papaya","paper","paperback","paprika","parable","parachute","parade","paradigm","paradise","paradox","paragon","paragraph","parallel","paralyze","paramount","paramour","parapet","parasite","parasol","parcel","parchment","pardon","parent","parental","parka","parliament","parlor","parody","parole","parrot","parsnip","part","partake","partial","particle","particular","partisan","partition","partner","partridge","party","passage","passbook","passenger","passerby","passion","passive","passbook","passport","password","pasta","paste","pastel","pastime","pastor","pastry","pasture","patch","patent","pathway","patience","patient","patio","patriarch","patriot","patrol","patron","pattern","paunch","pauper","pave","pavement","pavilion","pawpaw","pawnshop","payment","peaceful","peacemaker","peach","peachy","peacock","peak","peanut","pearl","peasant","pebble","pecan","pedal","pedestal","pedestrian","pedigree","peel","peephole","peer","pegboard","pelican","pellet","pelt","pelvis","penalty","pencil","pendant","pendulum","penguin","penicillin","peninsula","penitent","penknife","pennant","penny","pension","pensioner","pentagon","penthouse","peony","people","pepper","peppermint","percent","perception","perch","percussion","perfect","perform","perfume","peril","perimeter","period","periodic","peripheral","perish","perjury","perk","permanent","permeate","permit","perpetual","perplex","persecute","persimmon","persist","person","personal","personnel","perspective","persuade","perspiration","pertain","pertnacity","peruse","pervade","perverse","pester","petal","petition","petroleum","petticoat","petty","pewter","phantom","pharmacy","phase","pheasant","phenomenon","phial","philosophy","phlox","phone","phonetic","phonograph","photo","photograph","phrase","physical","physician","physics","pianist","piano","piazza","piccolo","pickax","picket","pickle","picnic","picture","piebald","piece","pierce","piety","pigeon","pigment","pigskin","pike","pile","pilgrim","pillage","pillar","pillow","pilot","pimple","pinwheel","pinafore","pincer","pinch","pine","pineapple","pinion","pinnacle","pint","pioneer","pious","pipe","pipeline","piping","pirate","pistol","piston","pitcher","pitchfork","piteous","pitfall","pithy","pitiful","pittance","pity","pivot","pixie","pizza","placard","place","placebo","placement","placid","plagiarism","plague","plaid","plain","plaintiff","plait","plan","plane","planet","planetary","plank","plankton","planner","plant","plantain","plantation","planter","plaque","plasma","plaster","plastic","plate","plateau","platform","platinum","platitude","platter","play","player","playful","playground","playmate","playoff","playpen","playwright","aza","plea","plead","pleasant","pleasantry","please","pleasure","pleat","pledge","plenary","plentiful","plenty","pliable","pliers","plight","plodder","plot","plow","plowshare","pluck","plug","plum","plutage","plumber","plumbing","plume","plummet","plump","plumpness","plunder","plunge","plural","plush","plywood","pneumonia","poach","pocket","pocketbook","podium","poem","poet","poetic","poetry","poignant","poinsettia","poise","poison","poke","poker","polar","polarity","polaroid","pole","polecat","police","policeman","policy","polio","polish","polite","political","politician","politics","polka","poll","pollen","pollute","pollution","olo","polyester","polygon","pomp","pompadour","pompous","cho","pond","ponder","ponderous","pontoon","pony","poodle","pool","popcorn","poplar","lin","poppy","populace","popular","populate","porcelain","porch","porcupine","pore","porridge","port","portable","portal","portend","porter","portfolio","porthole","ico","portion","portrait","portray","pose","position","positive","posse","possess","possibility","possible","possum","postage","postal","postcard","poster","postman","postpone","posture","posy","potable","potash","potato","potency","potentate","potion","pottery","potpourri","pouch","poultry","pound","pour","pout","poverty","powder","power","powerful","pox","practical","practice","practitioner","prairie","praise","prance","prank","prankster","pray","prayer","preach","preamble","precaution","precede","precedent","precept","precinct","precious","precipice","precise","precision","preclude","precocious","precursor","predator","predecessor","predict","predicament","preface","prefect","prefer","preference","prefix","pregnant","prehistoric","prejudice","prelate","preliminary","prelude","premature","premier","premise","premium","monition","preoccupy","preparation","prepare","prepay","preponderance","preposition","preposterous","prerequisite","prerogative","presage","presbytery","preschool","prescribe","prescription","presence","present","presentable","presentation","preservation","preserve","reside","president","press","pressbook","pressing","pressure","prestige","presume","presumption","pretence","pretend","pretender","pretext","pretty","prevail","prevalent","prevaricate","prevent","prevention","preview","previous","prey","price","priceless","prickle","pride","priest","prig","primacy","primary","primate","prime","primer","primeval","primitive","primrose","prince","princely","princess","principal","principle","print","printer","printing","printout","prior","priority","prism","prison","prisoner","pristine","privacy","private","privation","privilege","prize","probability","probable","probation","probe","probity","problem","procedure","proceed","process","procession","proclaim","proclamation","proclivity","procrastinate","procure","prodigal","prodigy","produce","producer","product","production","productive","profane","profess","profession","professor","proffer","proficiency","proficient","profile","profit","profitable","profound","profuse","progenitor","progeny","prognosis","program","programme","progress","prohabit","prohibit","prohibition","project","projectile","projection","projector","proletariat","prolific","prologue","prolong","promenade","prominent","promise","promising","promontory","promote","promotion","prompt","prompter","promulgate","prone","prong","pronoun","pronounce","proof","propaganda","propel","propeller","propensity","proper","property","prophecy","prophesy","prophet","prophylactic","propitiate","propitious","proportion","proposal","propose","proposition","propound","proprietary","proprietor","propriety","propulsion","prose","prosecute","prosecution","prospect","prospectus","prosper","prosperity","prosperous","prostrate","protagonist","protect","protection","protective","protector","protege","protein","protest","protocol","prototype","protract","protrude","proud","prove","proverb","proverbial","provide","providence","provident","province","provincial","provision","provisional","provocation","provoke","provost","prowess","prowl","proximity","proxy","prude","prudence","prudent","prudish","prune","psalm","psalter","pseudonym","psychology","puberty","public","publican","publication","publicity","publish","publisher","pudding","puddle","puerile","puff","puffin","pugilist","pugnacious","pulley","pullover","pulmonary","pulp","pulpit","pulsate","pulse","puma","pumice","pump","pumpkin","puncture","pundit","pungent","punish","punishment","punitive","punster","pupa","pupil","puppet","puppy","purchase","purchaser","pure","puree","purgatory","purge","purify","purist","puritan","purity","purl","purloin","purple","purport","purpose","purse","purser","pursuance","pursue","pursuit","purvey","purveyor","push","pushcart","pushover","pusillanimous","pussycat","putative","putrefy","putrid","putty","puzzle","puzzler","pygmy","pyjamas","pyramid","pyre","python","quack","quadrangle","quadrant","quadruped","quadruple","quaff","quagmire","quail","quaint","quake","quaker","qualification","qualify","quality","qualm","quandary","quantity","quantum","quarantine","quarrel","quarry","quart","quarter","quarterdeck","quarterly","quartermaster","quartet","quarto","quartz","quash","quasi","quaver","quay","queen","queer","quell","quench","querulous","query","quest","question","questionnaire","queue","quibble","quick","quicken","quicklime","quicksand","quicksilver","step","quid","quiescent","quiet","quietness","quill","quilt","quince","quinine","quintessence","quintet","quip","quirk","quisling","quit","quite","quiver","quixotic","quiz","quoin","quoit","quota","quotation","quote","quotient","rabbi","rabbit","rabble","rabid","rabies","raccoon","race","racecourse","racehorse","racer","racial","racism","racist","rack","racket","racketeer","radar","radial","radiance","radiant","radiate","radiation","radiator","radical","radio","radioactive","radish","radium","radius","raffle","raft","rafter","ragged","raging","ragout","ragtime","raid","raider","rail","railing","railroad","railway","rain","rainbow","raincoat","raindrop font","rainfall","rainy","raise","raisin","rajah","rake","rally","ramble","rambler","ramification","ramp","rampage","rampant","rampart","ramshackle","ranch","rancher","rancid","rancor","random","range","ranger","rank","rankle","ransack","ransom","rant","rapacious","rapidity","rapids","rapier","rapine","rapt","rapture","rare","rarefy","rarely","rarity","rascal","rash","rasher","rasp","raspberry","ratable","ratch","ratchet","rate","ratepayer","rather","ratify","rating","ratio","ration","rational","rationale","rattan","rattle","rattlesnake","ravage","rave","ravel","raven","ravine","ravish","rawhide","rayon","razor","reach","react","reaction","reactionary","reactivate","read","readable","reader","readily","readiness","reading","readjust","ready","reaffirm","reagent","real","realism","realist","reality","realize","realm","reap","reaper","reappear","reappraise","rear","rearm","rearrange","reason","reassure","rebate","rebel","rebellion","rebound","rebuff","rebuild","rebuke","rebus","rebut","recalcitrant","recall","recant","recapitulate","recapture","recede","receipt","receive","receiver","recent","receptacle","reception","receptive","receptor","recess","recession","recessive","recipe","recipient","reciprocal","recite","reckless","reckon","reclaim","reclining","recluse","recognition","recognize","recoil","recollect","recommend","recompense","reconcile","recondition","reconnaissance","reconnoiter","reconsider","reconstruct","record","recorder","recount","recoup","recourse","recover","recovery","recreant","recreation","recriminate","recruit","rectangle","rectify","rectitude","rector","rectory","rectum","recumbent","recuperate","recurrence","recycle","redbreast","redcoat","redden","reddish","redecorate","redeem","redeemer","redemption","redevelop","redhead","rediffusion","redirection","redolent","redoubt","redound","redress","redskin","reduce","reduction","redundant","wood","reed","reef","reefer","reek","reel","reenact","refectory","refer","referee","reference","referendum","refill","refine","refinement","refinery","refit","inflate","reflect","reflection","reflector","reflex","reforest","reform","reformation","reformatory","reformer","refract","refractory","refrain","refresh","refresher","refreshment","refrigerate","refrigerator","refuel","refuge","refugee","refund","refusal","refuse","refute","regain","regal","regale","regalia","regard","regatta","regenerate","regent","regime","regiment","region","regional","register","registrar","registration","registry","regress","regret","regular","regulate","regulation","regulator","rehabilitate","rehearsal","rehearse","reign","reimburse","rein","reindeer","reinforce","reinstate","reissue","reiterate","reject","rejoice","rejoin","rejoinder","rejuvenate","relapse","relate","relation","relationship","relative","relax","relaxation","relay","release","relegate","relent","relevant","reliable","reliance","relic","relict","relief","relieve","relinquis","relish","relocate","reluctant","rely","remain","remainder","remains","remand","remark","remarkable","remarry","remedy","remember","remembrance","remind","reminder","reminisce","remiss","remission","remit","remittance","remnant","remodel","remonstrate","remorse","remote","remount","removal","remove","remunerate","renaissance","renal","renounce","renovate","renown","rent","rental","renunciation","reopen","reorganize","repair","reparable","reparation","repartee","repatriate","repay","repeal","repeat","repeater","repel","repellent","repent","repentance","repercussion","repertoire","repetition","repetitive","replace","replacement","replenish","replete","replica","reply","report","reporter","repose","repository","repossess","reprehend","represent","repress","reprieve","reprimand","reprisal","reproach","reprobate","reproduce","reproof","reprove","reptile","republic","republican","repudiate","repugnant","repulse","repulsion","reputable","reputation","repute","request","requiem","require","requirement","requisite","requisition","requite","rescind","rescue","research","reseal","resemble","resent","resentment","reservation","reserve","reservoir","resettle","reshuffle","reside","residence","resident","residential","residual","residue","resign","resignation","resilient","resin","resist","resistance","resolute","resolution","resolve","resonance","resonant","resort","resound","resource","respect","respectable","respectful","respective","respiration","respirator","respire","respite","resplendent","respond","respondent","response","responsible","responsive","rest","restaurant","restful","restitution","restive","restless","restoration","restore","restrain","restraint","restrict","restriction","result","resume","resumption","resurrect","resuscitate","retail","retailer","retain","retainer","retaliate","retard","retch","retention","reticent","retina","retinue","retire","retirement","retort","retouch","retrace","retract","retreat","retrench","retribution","retrieve","retriever","retroactive","retrograde","retrospect","return","reunion","reunite","reusable","reuse","revamp","reveal","reveille","revel","revelation","revelry","revenge","revenue","reverberate","revere","reverence","reverie","reversal","reverse","revert","review","reviewer","revile","revise","revision","revival","revive","revoke","revolt","revolting","revolution","revolutionary","revolve","revolver","revue","revulsion","reward","reword","rewrite","rhapsody","rhetoric","rheumatism","rhino","rhinoceros","rhizome","rhodium","rhododendron","rhubarb","rhyme","rhythm","ribbon","riboflavin","rice","rich","riches","rickety","rickshaw","ricochet","ridic","ridicule","ridiculous","riding","rifle","rifleman","rift","rigging","right","righteous","rigid","rigor","rigorous","rill","rime","ring","ringleader","ringlet","ringmaster","ringworm","rink","rinse","riot","riotous","ripcord","ripen","ripple","rise","riser","risible","risk","risky","risotto","rite","ritual","rival","rivalry","river","riverbank","riverside","rivet","rivulet","road","roadblock","roadside","roadstead","roadster","roadway","roam","roamer","roar","roast","robber","robbery","robe","robin","robot","robotics","robust","rocker","rockery","rocket","rocky","rodeo","roe","rogue","roster","rotate","rotation","rotten","rouge","rough","roughage","round","roundabout","roundup","route","routine","rowboat","royal","royalty","rubber","rubbish","rubble","ruby","rudder","ruffle","rugby","ruin","ruinous","ruler","rummage","rumor","runner","runway","rupture","rural","rustic","rustle","sabotage","sabre","sachet","sack","sackcloth","sacrament","sacred","sacrifice","sacrilege","sadness","safari","safeguard","safety","saffron","sagacious","sage","sail","sailor","saint","saintly","salad","salami","salaried","salary","salesman","salient","saliva","salmon","salon","saloon","salt","salted","salty","salubrious","salutary","salutation","salute","salvage","salvation","salve","salvo","samovar","sample","sampler","sanatorium","sanctify","sanctuary","sand","sandal","sandstone","sandwich","sandy","sanguine","sanitary","sanity","sapphire","sarcasm","sardine","saree","satin","satire","satisfy","saturate","sauce","saucepan","saucer","saucy","sauna","saunter","sausage","savage","savant","savor","savory","sawdust","sawmill","saxophone","scaffold","scald","scale","scallop","scalp","scamper","scan","scandal","scant","scar","scarce","scare","scarf","scarlet","scatter","scavenger","scenario","scene","scenery","scent","scepter","schedule","scheme","scholar","school","schoolboy","schooner","science","scientific","scientist","scissors","scoff","scold","scone","scoop","scooter","scope","scorch","score","scorn","scorpion","scotch","scoundrel","scour","scourge","scout","scowl","scramble","scrap","book","scrape","scratch","scream","screech","screen","screw","scribble","scribe","script","scroll","scrotum","scrub","scruple","scrutinize","scuffle","scull","sculptor","sculpture","scum","scurvy","scuttle","seaweed","seagull","seal","seam","seaman","seamstress","seaplane","seaport","search","seashore","seasick","seaside","season","seat","seaward","seaweed","secant","secede","seclude","second","secondary","secrecy","secret","secretary","secrete","sect","section","secular","secure","security","sedan","sedate","sediment","seduce","seed","seedling","seedy","seek","seeker","seemly","seep","seer","seesaw","seethe","segment","segregate","seine","seize","seizure","seldom","select","selection","selective","self","selfish","sell","seller","selvage","semantic","semaphore","semblance","semiconductor","seminary","semitone","senate","senator","send","sender","senile","senior","seniority","sensation","sensational","sense","sensible","sensitive","sensory","sensual","sentence","sentient","sentiment","sentinel","sentry","sepal","separate","separatist","sepia","sequel","sequence","serenade","serene","serenity","serf","serge","sergeant","serial","series","serious","sermon","serpent","serrated","serum","servant","serve","server","service","serviceable","servitude","sesame","session","settle","settlement","settler","seven","seventeen","seventy","sever","severe","severity","sew","sewage","sewer","sewing","sex","sextant","sextet","sexton","sexual","shabby","shackle","shade","shading","shadow","shadowy","shady","shaft","shaggy","shaken","shaker","shaky","shale","shallot","shallow","shame","shameful","shameless","shampoo","shamrock","shanghai","shank","shanty","shape","shapeless","shapely","shard","share","shareholder","shark","sharp","sharpen","sharpener","shatter","shave","shaver","shawl","sheaf","shear","shears","sheath","sheathe","shed","sheen","sheep","sheepskin","sheer","sheet","sheik","shelf","shell","shellac","shelter","shelve","shepherd","sherbet","sheriff","sherry","shield","shift","shilling","shimmer","shin","shine","shingle","shiny","ship","shipboard","shipment","owner","shipping","wreck","wright","yard","shire","shirk","shirt","shiver","shoal","shock","shocking","shoddy","shoe","shoemaker","lace","horn","maker","shine","shoot","shooter","shooting","shop","keeper","lifter","lifting","window","shore","shoreline","short","shortage","bread","cake","coming","fall","hand","lived","ly","ness","ning","sits","hand","walk","shot","gun","shoulder","shout","shove","shovel","show","boat","case","down","er","ery","ily","man","manship","room font","showy","shred","shrewd","shriek","shrill","shrimp","shrine","shrink","shrinkage","shrivel","shroud","shrub","shrubbery","shrug","shudder","shuffle","shun","shunt","shut","shutter","shuttle","cock","shy","shyly","shyness","siam","siberian","sibilant","sibling","sick","sicken","sickle","sickly","sickness","side","arm","board","car","line","long","show","track","walk","ways","sidereal","siege","sienna","sierra","siesta","sieve","sift","sifter","sigh","sight","seeing","seer","sign","signal","signature","signet","significance","significant","signify","signpost","silence","silencer","silent","silk","silken","silky","sill","silly","silo","silt","silver","smith","ware","y","similar","similarity","simile","simmer","simper","simple","ton","plicity","simplify","simply","simulate","simulation","sin","since","sincere","sincerity","sine","sinecure","sinew","sinewy","sinful","sing","singer","singing","single","let","ton","singly","singular","sinister","sink","er","hole","sinless","sinner","sinter","sinuous","sinus","sip","siphon","sir","sire","siren","sirloin","sister","hood","in-law","ly","sit","com","in","ter","ting","site","situation","six","pence","teen","th","ty","size","able","sizzle","skate","board","r","ting","skein","skeleton","sketch","book","y","skew","skewer","ski","er","ing","skid","skill","ed","ful","skillet","skim","mer","skimp","y","skin","flint","head","less","ny","skip","per","skirmish","skirt","skit","skittish","skittle","skulk","skull","cap","skunk","sky","cap","craft","line","lark","light","line","scraper","slab","slack","en","er","ness","slacks","slag","slake","slam","slander","ous","slang","y","slant","ing","slap","dash","jack","stick","slash","slat","slate","slater","slattern","slaughter","house","slave","ry","slaver","slavish","slay","er","sledge","hammer","sleek","sleep","er","iness","less","ing","y","sleet","y","sleeve","less","sleigh","slender","sleuth","slice","slicing","slick","er","slide","sliding","slight","ingly","ly","ness","slim","line","ness","slime","y","sling","shot","slink","y","slip","cover","knot","per","pery","shod","stream","way","slit","slither","y","sliver","slogan","sloop","slope","sloping","sloppy","slosh","slot","machine","sloth","ful","slouch","hat","y","slough","sloven","ly","slow","coach","down","motion","ness","sludge","y","slug","gard","gish","slum","ber","berous","lord","slump","slur","slurry","slush","y","sly","ly","ness","smack","er","ing","small font","pox","ness","smart font","en","ly font","ness","smash font","ing","smatter","ing","smear","y","smell","iness","ing","y","smelt","er","ery","smile","smiling","smirch","smirk","smite","smith","ereens","ery","y","smock","ing","smog","gy font font","smoke","house","less","r","stack","less","y font","smooth","ie","ly","ness","smolder","smother","smudge","y","smug","gle","gler","ling","ly","ness","smut","ty","snack","bar","snaffle","snag","gy","snail","snake","y","snap","dragon font","less font","pershot","pish","py","shot","snare","snarl","snatch","sneak","ers","iness","y","sneer","sneeze","sneezing","snick","snicker","snide","sniff","le font","snigger","snip","er","ing","pet","snipe","r","snippet","snivel","snob","bery","bish font","snood","snooper","snore","snorkel","snort","snout","snow","ball","berry","bound","cap","drift","fall","flake","plow","shoe","storm","y","snub","nosed","snuff","box","ers","le","snug","gle","gery","ly","ness","soak","er","ing","soap","box","stone","suds","y","soar","ing","sob","bing","sober","ly","ness","propriety","soccer","sociable","sociability","social","ism","ist","ite","ity","ize","ly","society","sociology","sock","socket","sod","soda","fountain","water","sodden","sodium","sofa","bed","soft","ball","en","ener","headed","hearted","ly font font","ness","ware","soggy","soil","soiree","sojourn","solace","solar","plexus","system","solder","ing","soldier","ly","ry","sole","cism","ly","solemn","ity","ize","ly","solicitor","solicitous","ude","solid","arity","ification","ify","ity","ly","solitaire","solitary","ude","solo","ist","solstice","soluble","bility","solution","solve","nt","ncy","somatic","somber","ly","sombrero","some","body","day","how","one","place","somersault","something","time","times","somnambulist","son","ata","et","ic","in-law","ly","sonorous","soon","er","soot","h","say","er","y","sop","histicated","tication","histry","homore","orific","prano","sorcerer","ess","y","sordid","ly","ness","sore","ly","ness","sorghum","sorrel","sorrow","ful","fully font","sorry","sort","ie","er","soufflé","sought","soul","ful","less","sound","less","proof font","track","soup","kitchen","y","sour","dough","ly","ness","source","book","south","bound","east","erly","ern","erner","paw","pole","ward","wester","souvenir","sovereign","ty","sow","er","ing","soy","bean","sauce","space","craft","man","ship","suit","walk","spacious","ness","spade","spaghetti","span","iel","gle","ish","spank","ing","spanner","spare","ribs","sparing","ly","spark","le","ler","ling","plug","sparrow","hawk","sparse","ly","ness","spartans","spasm","odic","spastic","spat","ula","spatter","spatula","spawn","speak","easy","er","ing font","spear","head","mint font","special","ist","ity","ize","ly","ty","species","specific","ally","ation","ify","ity","specimen","specious","speck","le font","spectacle","s","spectacular","spectator","specter","spectral","spectrogram","spectrometer","spectrum","speculate","ion","ive","or","speech","less","ify","speed","boat","ometer","way","y","spell","binder","bound","ing","spelt","spend","thrift font","sperm","spew","sphere","ical","sphinic","sphinx","spice","y","spider","web","y","spike","y","spill","way","spin","ach","drier","dle","off","ster","spinach","spinal","cord","spindle","y","spine","less","spinner","spinster","spiral","spire","spirit","ed","less font","ual","ualism","ualist","uality","ually","ous","spit","ball","fire","toon","spite","ful","splash font","down","y","splay font","foot","spleen","splendid","ly","splendor","splice","splint","er","erproof","y","split","second","splurge","splutter","spoil","age","er font","sport","ing","ive","sman","swoman","y font","spot font","light","less","ter","ty","spouse","spout","sprain","sprawl","spray","er","gun","spread","eagle","sheet","spree","sprig","sprightly","spring","board","time font","y","sprinkle","r","sprint","er","sprite","sprout","spruce","sprung","spry","spud","spume","spun","spunk","y font","spur","ious","spurn","spurt","sputnik","sputter","spy font","glass","hole","squad","ron","squalid","squalor","squall","y","squander","square","dance","ly","squash","y font","squat","ter","squaw","k","squeak","y","squeal","er","squeamish","squeegee","squeeze","r","squelch","squid","squint","squire","squirm","squirrel","squirt","stab","ilizer","ility","ilable","ilizing","stable","yard","stack","yard","stadium","staff","er font","stag","beetle","party","stage","coach","craft","fright","hand","manager","whisper","stagger font","ingly","staging","stagnant","ate","ation","staid","stain","less font","glass","stair","case","way","well","stake font","holder","stalactite","stalagmite","stale","mate","ness","stalk","er","ing","stall","ion","holder","wart","stamen","stamina","stammer","er","stamp","ede","er","ing","stance","stanch","ion","standard font","bearer font","ize","ization","standby font","standing","point","still","point font","stanza","staple","r","star font","board","burst","dom","fish","gazer","less","light","lit font","lit","starch","y font","stare","stark","ly","ness","starling","starry","start font","er","erter","ling","point","startle","starve","ation","starving","state font","craft","house","less","ly","ment","room","side","smanship","static","ally","station","ary","er","ery","master","wagon","statistic","ian","s","statuary","statue","ette","sque","stature","status","symbol","statute","ory","staunch","ly","stave","stay","er","stead","fast","fastly","fastness","steady","ily","ness","steak","house","steal font","th","thy font","thily","steam font","boat","engine","er","iron","roller","ship","y","steel","works font","y","steep","en","le","lejack","ly","ness","steer","age font","ing","steering","wheel","stellar","stem","ware","stench","stencil","stenographer","y","stentorian","step","brother","child","daughter","father","ladder","mother","parent","sister","son","stepmother","steppe","stereo","phonic","scope","type","typed","typing","sterile","ity","ization font","ize","sterling","stern","ly","ness","um","stethoscope","stevedore","stew","ard","ess","ardship","pan","stick","er","iness","ing","ler","y","stiff","en","ener","ly","neck","ness","stifle","ing","stigma","tize","tization","stile","stiletto","still","born","life","ness font","room font font","stilt","ed","stimulant","ate","ation","ative","ulus","sting","er","ily","y","stingy","stink","er","ing","stint","stipend","iary","stipulate","ion","stir","ring","rup","stitch","ery","ing font text","stock","ade","broker","car","exchange","holder font","ing","man","market","pile","room font","still","taking font","yard","stocking","s","stocky","stoic","al","ally","ism","stoke","hold font","r","stole","en","solid","ity","ly font","ness","stomach","ache","pump","stomp","stone","crop","cutter font","mason","ware","work","y","stool","pigeon","stoop","stop","cock","gap","light","over","page","watch","storage","battery","store","house","keeper","room font","stork","storm","cloud","coat","proof","y","story","book","teller","telling","stout font","heart","ly","ness","stove","pipe","stow font","away","straddle","strafe","straggle","r","straight","away","edge","en","forward","ly","ness","strain","er font","ed","ing","strait font","jacket","laced","strand","ed","strange","ly","ness","stranger","strangle font","hold","ulation","strap","less","ping","strata","gem","gy","gic","gist","stratify","cation","stratosphere","stratum","straw","berry","board","stray","er","streak","y","stream","er","let font","line","lined","street","car","walker font","strength","en font","ener","strenuous","ly","streptococcus","streptomycin","stress","ful","stretch","er","strew","n","striation","ed","strict","ly","ness","ure","stride","nt","nty","strife","strike","breaker","ing","ingly","ring","out","pay font","er","striking","string","ency font","ent font","ently","entness font","er","et","y","stringent","strip","ling","teaser","stripe","d","strive","n","strobe","stroke","stroll","er","strong font","hold","ly","box","mind","room","struck","structural","ally","structure","struggle","strum","strumpet","strut","strychnine","stub","bing","ble","born","bornly","bornness","bly","by font","stucco","stuck font","up","stud","book","farm","finder","io font","ious font","iously","iousnes","horse","muffin font","student font","ship","studied","studio","studious","study","stuff","ing","y","stultify","stumble","ing","block","stump","y","stun","ner","ning","ningly","stunt","ed","man","stupefy","faction","stupendous","ly","stupid","ity","ly font text","stupor","sturdy","ily","ness","sturgeon","stutter","er font","ing","sty","stye","style","ish","ist","istic","ize","listic","less font","stylish","stylus","stymie","suave","ly","suavity","sub","acid","agent","aquatic","atomic font","committee","conscious","consciously","consciousness","divide","division","domain","due","entry","group font","heading","human","impose","inspector","less","let","limate","lime","liminal","marine","merge","merged","mergence","mersible","mission","missive","missively","missiveness","mit","ordinate","ordination","organize","plot","polar","rosa","script","section","set","side","sidence","sidy","soil","sonic","species","standard","structure","substance","standardize","station","subtle","subtly","suburb","suburban","succeed","success","successful","succulent","succumb","such","suck","sucker","suckle","sucrose","suction","sudden","suds","sue","suede","suet","suffer","suffering","suffice","sufficient","suffix","suffocate","sugar","suggest","suicide","suit","suitable","suite","suitor","sulk","sulky","sullen","sully","sulphur","sultan","sultry","sum","sumac","summary","summer","summit","summon","sumptuous","sun","sunbeam","sunburn","sunday","sunder","sundial","sundry","sunflower","sunglasses","sunlight","sunny","sunrise font","sunset","sunshine","stroke","super","superb","superficial","superfluous","superhero","superhuman","superintend","superior","superlative","supermarket","supernatural","supervise","supper","supple","supplement","supply","support","suppose","suppress","supreme","sure","surf","surface","surge","surgeon","surgery","surly","surmise","surmount","surname","surpass","surplus","surprise","surrender","surround","survey","survive","suspect","suspend","suspense","suspicion","sustain","swallow","swamp","swan","swap","swarm","swarthy","swat","swatch","swath","sway","swear","sweat","sweater","sweet","sweeten","sweetness","sweetheart","swell","swelter","swerve","swift","swim","swimmer","swindle","swine","swing","swipe","swirl","switch","swivel","swoop","sword","sycamore","syllable","symbol","symmetry","sympathy","symphony","symptom","synagogue","syndicate","synonym","syntax","synth","syringe","syrup","system","tabby","table","tableau","tablecloth","tablespoon","tablet","taboo","tack","tackle","tactic","tadpole","taffy","tail","tailor","taint","take","talent","talisman","talk","talkative","tall","tallow","tally","tame","tamper","tan","tandem","tangerine","tangle","tank","tankard","tanner","tapestry","tapioca","tardiness","tardy","target","tariff","tarnish","tarot","tart","tartar","task","tassel","taste","tasty","tatters","tattoo","taunt","tavern","tax","taxi","taxicab","teacher","teaching","teacup","teak","team","teapot","tear","tease","teaspoon","technique","teddy","tedious","tedium","teem","teenager","teeth","telegram","telegraph","telephone","telescope","television","tell","teller","temper","temperament","temperance","temperature","tempest","temple","tempo","temporary","tempt","temptation","tenant","tend","tendency","tender","tendon","tenement","tennis","tenor","tense","tension","tent","tentacle","term","terminal","terminate","termit","terrace","terrain","terrestrial","terrible","terrier","terrific","terror","terry","test","testament","testify","testimonial","text","textile","texture","thank","thankful","thanks","thaw","theater","theft","theme","theme","then","theology","theorem","theory","therapy","there","thereby","therefore","thermal","thermometer","thermostat","thesis","thick","thicken","thicket","thief","thigh","thimble","thin","thing","think","thinker","third","thirst","thirsty","thistle","thorn","thorny","thorough","thread","threat","threaten","three","thresh","thrift","thrifty","thrill","thriller","thrive","throat","throb","throne","throng","throttle","through","throw","thrush","thrust","thumb","thump","thunder","thursday","thyme","tiara","tibia","tick","ticket","tickle","tide","tidings","tidy","tie","tier","tiger","tight","tighten","tightrope","tights","tile","till","tilt","timber","time","timely","timer","timetable","timid","tin","tinder","tinge","tingle","tinker","tinkle","tinsel","tint","tiny","tip","tipoff","tiptoe","tipsy","tire","tired","tiresome","tissue","title","toast","toaster","tobacco","today","toddler","toe","toffee","tofu","together","toggle","toil","toilet","token","tolerable","tolerance","tolerant","tolerate","toll","tomato","tomb","tombstone","tome","tomtit","tone","tongs","tongue","tonic","tonight","tonnage","tonsil","tool","toolbox","tooth","toothbrush","toothpaste","toothpick","top","topaz","topic","topmost","topple","torch","torment","tornado","torpedo","torrent","tortoise","torture","toss","total","totem","touch","touchdown","touchy","tough","toughness","tour","tourist","tournament","towel","tower","town","township","toxic","toy","trace","tracing","track","tracker","traction","tractor","trade","trademark","trader","tradition","traffic","tragedy","tragic","trail","trailer","train","trainee","trainer","training","trait","traitor","tramp","trample","tramway","tranquil","tranquility","transfer","transform","transit","transition","translate","translator","transmission","transmit","transom","transparent","transplant","transport","trap","trapeze","trash","trashcan","travel","traveler","tray","treacherous","treachery","tread","treadmill","treason","treasure","treasurer","treasury","treat","treatise","treatment","treaty","treble","tree","trellis","tremble","tremor","trench","trend","trespass","tress","trestle","trial","triangle","tribe","tribune","tribute","trick","trickery","trickle","tricky","tricycle","trident","trifle","trifling","trigger","trill","trilogy","trim","trinity","trinket","trio","trip","tripe","triple","triplet","triplicate","tripod","triumph","triumphant","trivia","trooper","trophy","tropical","trot","trotter","trouble","troublesome","trough","troupe","trousers","trout","trowel","truce","truck","trucker","trudge","true","truffle","truism","truly","trumpet","truncheon","trunk","trust","trustee","trustworthy","truth","truthful","try","tub","tuba","tube","tubing","tubular","tuck","tuesday","tuft","tug","tugboat","tulip","tumble","tumbler","tummy","tumor","tumult","tuna","tune","tuner","tunic","tunnel","turban","turbid","turbine","turbo","turbulent","turf","turkey","turmoil","turn","turnip","turnpike","turntable","turpentine","turquoise","turret","turtle","tusk","tussle","tutor","tuxedo","twain","twang","tweed","tweezers","twelfth","twelve","twenty","twice","twig","twilight","twin","twine","twinge","twinkle","twirl","twist","twister","twitch","twitter","two","tycoon","type","typewriter","typhoon","typical","typist","tyrant","ubiquitous","udder","ugly","ulcer","ulterior","ultimate","ultimatum","umbrella","umpire","unanimous","unarm","unassuming","unaware","uncertain","uncle","unclean","uncoil","uncommon","uncouth","uncover","under","undercover","undergo","underground","underhand","underline","underneath","understand","undertake","underwater","underwear","undo","undue","undulate","uneasy","unemployed","unequal","uneven","unexpected","unfair","unfaithful","unfit","unfold","unfortunate","unhappy","unicorn","uniform","unify","union","unique","unisex","unit","unite","unity","universal","universe","university","unkind","unknown","unless","unlike","unlikely","unload","unlock","unlucky","unmask","unnatural","unpack","unpleasant","unpopular","unravel","unrest","unripe","unrivaled","unroll","ruly","unruly","unsafe","unseen","unskilled","unsound","unstable","unsteady","untidy","untie","until","untold","untrue","unusual","unveil","unwary","unwell","unworthy","wrap","yielding","upon","upper","upright","uprising","uproar","upset","upstairs","upstart","upward","uranium","urban","urbane","urchin","urge","urgency","urgent","urn","usage","useful","useless","user","usher","usual","utensil","utility","utilize","utmost","utopia","utter","utterance","vacancy","vacant","vacate","vacation","vaccine","vacuum","vague","vaguely","vain","valance","vale","valet","valiant","valid","validity","valise","valley","valor","valuable","value","valve","vampire","van","vandal","vane","vanilla","vanish","vanity","vanquish","vapor","variable","variance","variation","variety","various","varnish","vary","vase","vassal","vast","vat","vault","veal","vector","veer","vegetable","vegetarian","vegetation","vehicle","veil","vein","velocity","velour","velvet","vending","vendor","veneer","venerable","venerate","venereal","vengeance","venial","venison","venom","vent","ventilate","venture","venue","veranda","verb","verbal","verbatim","verdict","verge","verify","vermin","vermouth","vernacular","vernal","versatile","verse","version","versus","vertigo","vessel","vest","vestige","vestry","veteran","veto","vexation","viable","vial","vibrant","vibrate","vicar","vicarage","vice","vicinity","vicious","victim","victor","victorian","victory","victuals","video","view","viewer","viewpoint","vigil","vigilant","vigor","vigorous","vile","villa","village","villain","vine","vinegar","vineyard","vintage","viol","viola","violate","violence","violent","violet","violin","violinist","viper","virgin","virginity","virtue","virtuoso","virtuous","virus","visage","viscount","viscous","visible","vision","visionary","visit","visitor","visor","vista","visual","vital","vitality","vitamin","vivid","vivacious","vocal","vocation","vodka","vogue","voice","void","volatile","volcano","volition","volley","volleyball","voltage","volume","voluntary","volunteer","voluptuous","vomit","voodoo","vortex","votary","vote","voter","vouch","voucher","vow","vowel","voyage","voyager","vulgar","vulnerability","vulture","wadding","waddle","wade","waffle","waft","wage","wager","wagon","waif","wail","waist","waistcoat","wait","waiter","waitress","waive font","waiver","wake","walk","walker","walkway","wall","wallaby","wallet","wallflower","wallow","wallpaper","walnut","walrus","waltz","wan","wand","wander","wanderlust font","wane","want","wanton","war","warble","ward","warden","wardrobe","ware","warehouse","warfare","warrior","warship","wart","wary","wash","washbasin","cloth","board","bowl","ing","out","room font","stand","wasp","waste","basket","ful","land","paper","watch","band","dog","man","maker","tower","word font","water","fall","fowl","front","lily","line","logged","melon","proof","shed","spout","tight","way","wave","length","let","waver","wavy","wax","en","paper","work","y","way","bill","farer","side","ward","weaken","weakling","weakness","wealth","y","weapon","ry","wear","er","iness","ing","y","weasel","weather","cock","forecast","man","proof","vane","weave","r","web","bing","site","wed","ding","lock","wedge","wednesday","weed","y","week font","day font font","end font font","ly font font","weep","ing","weevil","weigh","t","ty","weird","ness","welcome","weld","er","welfare","well","being","wellington","welt","welter","wench","west","erly","ern","erner","bound","ward","wet","ness font","suit","whale","bone","r","ing","wharf","wheat","en","wheel","barrow","base font","chair","house","wright font","whet","stone","whey","whiff","whim","sical","sy","whine","whip","cord","lash font","whirl","pool","wind","whirring","whisk","ers","ey font","whisper","ing font","whistle","r","ing","white font font","wash","ity","ness","whittle","whiz","whoever","whole","hearted","sale","saler","some font","wholesome","wholly","whoop","ing","whopper","whore","whorl","wick","ed","ly","ness","wicker","work","wicket","wide font","spread","widow","er","hood","width","wield","wife","ly","wiggle","wigwam","wild","cat","erness","fire","life font","wilful","will","ful","ing","ingly","power font","willow","y font","wilt","wily","wimple","win","ner","ning","wince","winch","wind","break","breaker","fall","mill","pipe","proof font","shield","pipe","shield","ward","window","box","pane","sill","wine","glass","ery","wing","span","wink","er","less","winner","winnow","winsome","winter font","green","time","y","wipe","r","wire font","less","less","tap","y font font","wisdom","wise","crack","ly","wish","bone font","ful font font","wisp","y","wistful","ly","wit","chcraft","craft","ery","ly","ness","withdraw","al","wither","ing","withhold","within","without","withstand","witness","witty","wizard","ry","wobble","y","woe","begone","ful font","wolf","hound","ram","woman","hood","ish","kind","ly font","womb","bat","wonder","ful","fully","land","ous","ment font text","wont","ed","wood","bine","land","lark","man","nymph font","pecker","shed","wind font","work","able","bench","book","box","day font","force","house","load","man","manship","out","place","room font","shop font font","world font","wide","ly","ness","worm","wood font","y","worry","some","worse","en","worship","er","ful","worst","ed","sted","worth","iness","less","ly","while","y","wound","ed","woven","wrangle","r","wrap","per font","ping font","wrath","ful","wreak","wreath","e","wreck","age","er","wren","ch","wrest","ler font","ling","wretch","ed","edly","edness","wriggle","r","wring","er","wrinkle","y","wrist","band","watch","write","r","up","writing","written","wrong font","doer","doing","ful","fully","headed","ly","wroght","wry","ly","xenon","yacht","man","ing font","yam","yank","ee","yard","arm","stick font","yarn","yawn","ing font","year","book","ling","ly font","yeast","y","yell","ow","ish","yelp","yesterday","day font font","night","yet","yield","ing font","yodel","er","yoke","l","yolk","yonder","yore","you","young","ster","your","self","selves","youth","ful","fully","fulness","yucca","yule","tide","zeal","ot","ous","ously","ousness","zebra","zenith","zephyr","zero","zest","ful","y","zigzag","zinc","zip","code","per","zircon","zodiac","al","zone","zoo","logical","logist","logy font"
+        ];
+
+        // Clean & process unique words (only keep alphabetic words)
+        const DICTIONARY = Array.from(new Set(
+            EMBEDDED_WORDS
+                .map(w => w.toLowerCase().replace(/[^a-z]/g, ''))
+                .filter(w => w.length >= 2 && w.length <= 12)
+        ));
+
+        // State variables
+        let currentResults = [];
+        let particlesEnabled = true;
+        const particleContainer = document.getElementById('particle-container');
+
+        // Create floating bow and sparkle background particles
+        function createParticles() {
+            particleContainer.innerHTML = '';
+            if (!particlesEnabled) return;
+
+            const particleSymbols = ['🎀', '✨', '🌸', '🩰', '𑁍', '💗'];
+            const count = 15;
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.textContent = particleSymbols[Math.floor(Math.random() * particleSymbols.length)];
+                
+                // Random position & animation speed
+                const left = Math.random() * 100;
+                const duration = 6 + Math.random() * 8;
+                const delay = Math.random() * 5;
+                const fontSize = 14 + Math.random() * 16;
+
+                particle.style.left = `${left}vw`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.fontSize = `${fontSize}px`;
+
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        function toggleParticles() {
+            particlesEnabled = !particlesEnabled;
+            const circle = document.getElementById('toggle-circle');
+            const toggleBtn = document.getElementById('toggle-particles');
+            
+            if (particlesEnabled) {
+                circle.style.transform = 'translateX(20px)';
+                toggleBtn.classList.replace('bg-coquette-pink', 'bg-coquette-rose');
+            } else {
+                circle.style.transform = 'translateX(0px)';
+                toggleBtn.classList.replace('bg-coquette-rose', 'bg-coquette-pink');
+            }
+            createParticles();
+        }
+
+        // Handle preset button clicks
+        function setPreset(word) {
+            const input = document.getElementById('letter-input');
+            input.value = word;
+            handleInput();
+        }
+
+        function clearInput() {
+            const input = document.getElementById('letter-input');
+            input.value = '';
+            handleInput();
+            input.focus();
+        }
+
+        // Live input handling with slight debounce
+        let debounceTimer;
+        function handleInput() {
+            const inputVal = document.getElementById('letter-input').value;
+            const clearBtn = document.getElementById('clear-btn');
+            
+            clearBtn.classList.toggle('hidden', inputVal.length === 0);
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                unscrambleWords();
+            }, 150);
+        }
+
+        // Letter Frequency Counter Helper
+        function getCharCounts(str) {
+            const counts = {};
+            for (const char of str.toLowerCase()) {
+                if (char >= 'a' && char <= 'z') {
+                    counts[char] = (counts[char] || 0) + 1;
+                }
+            }
+            return counts;
+        }
+
+        // Check if word can be formed from available letters
+        function canFormWord(wordCounts, targetCounts) {
+            for (const char in wordCounts) {
+                if (!targetCounts[char] || wordCounts[char] > targetCounts[char]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Main Unscrambler Core Algorithm
+        function unscrambleWords() {
+            const rawInput = document.getElementById('letter-input').value.trim().toLowerCase();
+            const lettersOnly = rawInput.replace(/[^a-z]/g, '');
+
+            const emptyState = document.getElementById('empty-state');
+            const loadingState = document.getElementById('loading-state');
+            const resultsContent = document.getElementById('results-content');
+
+            if (!lettersOnly) {
+                emptyState.classList.remove('hidden');
+                loadingState.classList.add('hidden');
+                resultsContent.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            resultsContent.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+
+            const matchMode = document.querySelector('input[name="match-mode"]:checked').value;
+
+            setTimeout(() => {
+                const targetCounts = getCharCounts(lettersOnly);
+                const targetLen = lettersOnly.length;
+                
+                const matches = [];
+
+                for (let i = 0; i < DICTIONARY.length; i++) {
+                    const dictWord = DICTIONARY[i];
+                    
+                    // Exact Mode Filter
+                    if (matchMode === 'exact' && dictWord.length !== targetLen) {
+                        continue;
+                    }
+                    
+                    // Cannot form if dictionary word is longer than available input
+                    if (dictWord.length > targetLen) continue;
+
+                    const dictWordCounts = getCharCounts(dictWord);
+                    if (canFormWord(dictWordCounts, targetCounts)) {
+                        matches.push(dictWord);
+                    }
+                }
+
+                // Sort matching words by length (descending), then alphabetically
+                matches.sort((a, b) => b.length - a.length || a.localeCompare(b));
+
+                currentResults = matches;
+                displayResults(lettersOnly);
+                
+                loadingState.classList.add('hidden');
+                resultsContent.classList.remove('hidden');
+            }, 100);
+        }
+
+        // Render unscrambled word groups
+        function displayResults(queryStr) {
+            document.getElementById('total-count').textContent = currentResults.length;
+            document.getElementById('query-letters').textContent = queryStr;
+            document.getElementById('results-filter').value = '';
+
+            renderWordGroups(currentResults);
+        }
+
+        // Filter displayed results in real-time
+        function filterResults() {
+            const filterTerm = document.getElementById('results-filter').value.trim().toLowerCase();
+            const filtered = currentResults.filter(w => w.includes(filterTerm));
+            renderWordGroups(filtered);
+        }
+
+        // Render cards into length categories
+        function renderWordGroups(wordsList) {
+            const container = document.getElementById('word-groups-container');
+            container.innerHTML = '';
+
+            if (wordsList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-coquette-text/70 bg-white/50 rounded-2xl border border-coquette-pink/40">
+                        <div class="text-2xl mb-1">🕯️</div>
+                        <p class="font-serif italic">No matching sweet words found for this combination.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by length
+            const groups = {};
+            wordsList.forEach(w => {
+                const len = w.length;
+                if (!groups[len]) groups[len] = [];
+                groups[len].push(w);
+            });
+
+            // Sort lengths descending
+            const lengths = Object.keys(groups).sort((a, b) => b - a);
+
+            lengths.forEach(len => {
+                const groupWords = groups[len];
+                
+                const groupCard = document.createElement('div');
+                groupCard.className = 'bg-white/80 backdrop-blur-sm rounded-2xl border border-coquette-pink/70 p-5 shadow-sm hover:shadow-soft-pink transition duration-300';
+
+                // Category Header Badge
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'flex items-center justify-between border-b border-coquette-pink/40 pb-3 mb-4';
+                groupHeader.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-coquette-deep-rose">🎀</span>
+                        <h4 class="font-serif font-bold text-lg text-coquette-text">
+                            ${len}-Letter Words
+                        </h4>
+                    </div>
+                    <span class="bg-coquette-pink/60 text-coquette-deep-rose text-xs font-semibold px-2.5 py-1 rounded-full border border-coquette-pink">
+                        ${groupWords.length} ${groupWords.length === 1 ? 'word' : 'words'}
+                    </span>
+                `;
+
+                // Words Container (Grid of Pill Tags)
+                const grid = document.createElement('div');
+                grid.className = 'flex flex-wrap gap-2.5';
+
+                groupWords.forEach(word => {
+                    const tag = document.createElement('button');
+                    tag.onclick = () => copyToClipboard(word);
+                    tag.title = 'Click to copy ribbon word!';
+                    tag.className = 'group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coquette-lace hover:bg-coquette-pink text-coquette-text hover:text-coquette-deep-rose text-sm font-medium rounded-full border border-coquette-pink/60 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 shadow-sm';
+                    
+                    tag.innerHTML = `
+                        <span>${word}</span>
+                        <i class="fa-regular fa-copy text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-coquette-deep-rose"></i>
+                    `;
+                    grid.appendChild(tag);
+                });
+
+                groupCard.appendChild(groupHeader);
+                groupCard.appendChild(grid);
+                container.appendChild(groupCard);
+            });
+        }
+
+        // Clipboard Copy with Toast Feedback
+        function copyToClipboard(text) {
+            // Using fallback copy method for maximum iframe compatibility
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast(`Copied "${text}" to clipboard! 🎀`);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Show Toast Notification
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.textContent = message;
+            toast.classList.remove('hidden');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Initialize App on Window Load
+        window.onload = function() {
+            createParticles();
+            
+            // Set initial state for toggle switch UI
+            const circle = document.getElementById('toggle-circle');
+            circle.style.transform = 'translateX(20px)';
+        };
+    </script>
+</body>
+</html>
